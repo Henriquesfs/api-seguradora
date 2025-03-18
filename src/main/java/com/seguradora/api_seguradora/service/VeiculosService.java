@@ -1,6 +1,6 @@
 package com.seguradora.api_seguradora.service;
 
-import com.seguradora.api_seguradora.model.Veiculos;
+import com.seguradora.api_seguradora.model.Veiculo;
 import com.seguradora.api_seguradora.repository.VeiculosRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +14,24 @@ public class VeiculosService {
         this.veiculosRepository = veiculosRepository;
     }
 
-    public Veiculos salvar(Veiculos veiculos) {
-        return veiculosRepository.save(veiculos);
+    public Veiculo salvar(Veiculo veiculo) {
+        Optional<Veiculo> veiculoPorPlaca = veiculosRepository.findByPlaca(veiculo.getPlaca());
+
+        if(veiculo.getCliente() == null || veiculo.getCliente().getId() == null){
+            throw new IllegalArgumentException("Erro: Cliente é obrigatório.");
+        }
+
+        if (veiculoPorPlaca.isPresent() && !veiculoPorPlaca.get().getPlaca().equals(veiculo.getPlaca())) {
+            throw new IllegalArgumentException("Erro: Placa já cadastrada.");
+        }
+        return veiculosRepository.save(veiculo);
     }
 
-    public List<Veiculos> listarTodos(){
+    public List<Veiculo> listarTodos(){
         return veiculosRepository.findAll();
     }
 
-    public Optional<Veiculos> buscarPorId(Long id){
+    public Optional<Veiculo> buscarPorId(Long id){
         return veiculosRepository.findById(id);
     }
 

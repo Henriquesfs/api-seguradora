@@ -1,15 +1,12 @@
 package com.seguradora.api_seguradora.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 
@@ -24,10 +21,14 @@ public class Cliente {
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
     @NotBlank(message = "Cpf é obrigatório")
+    @Column(unique = true)
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
     private String cpf;
     private String endereco;
+    @Column(unique = true)
+    @Pattern(regexp = "\\(\\d{2}\\) 9\\d{4}-\\d{4}", message = "Celular deve estar no formato (XX) 9XXXX-XXXX")
     private String celular;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "cliente")
-    private List<Veiculos> veiculos;
+    private List<Veiculo> veiculos;
 }

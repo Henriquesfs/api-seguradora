@@ -1,5 +1,6 @@
 package com.seguradora.api_seguradora.controller;
 
+import com.seguradora.api_seguradora.dto.ClienteDTO;
 import com.seguradora.api_seguradora.model.Cliente;
 import com.seguradora.api_seguradora.service.ClienteService;
 import jakarta.validation.Valid;
@@ -17,26 +18,26 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> criarCliente(@Valid @RequestBody Cliente cliente){
+    public ResponseEntity<ClienteDTO> criarCliente(@Valid @RequestBody Cliente cliente){
         Cliente salvo = clienteService.salvar(cliente);
-        return ResponseEntity.ok(salvo);
+        return ResponseEntity.ok(toDTO(salvo));
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> listarClientes(){
-        List<Cliente> clientes = clienteService.listarTodos();
+    public ResponseEntity<List<ClienteDTO>> listarClientes(){
+        List<ClienteDTO> clientes = clienteService.listarTodos();
         return ResponseEntity.ok(clientes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarClienteId(@PathVariable Long id){
+    public ResponseEntity<ClienteDTO> buscarClienteId(@PathVariable Long id){
         return clienteService.buscarPorId(id)
-                .map(ResponseEntity::ok)
+                .map(cliente -> ResponseEntity.ok(toDTO(cliente)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente clienteAtualizado){
+    public ResponseEntity<ClienteDTO> atualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente clienteAtualizado){
         return clienteService.buscarPorId(id)
                 .map(clienteExistente -> {
                     clienteExistente.setNome(clienteAtualizado.getNome());
@@ -44,7 +45,7 @@ public class ClienteController {
                     clienteExistente.setEndereco(clienteAtualizado.getEndereco());
                     clienteExistente.setCelular(clienteAtualizado.getCelular());
                     Cliente atualizado = clienteService.salvar(clienteExistente);
-                    return ResponseEntity.ok(atualizado);
+                    return ResponseEntity.ok(toDTO(atualizado));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -57,5 +58,15 @@ public class ClienteController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    public ClienteDTO toDTO(Cliente cliente){
+        ClienteDTO dto = new ClienteDTO();
+        dto.setId(cliente.getId());
+        dto.setNome(cliente.getNome());
+        dto.setCpf(cliente.getCpf());
+        dto.setEndereco(cliente.getEndereco());
+        dto.setCelular(cliente.getCelular());
+        return dto;
     }
 }

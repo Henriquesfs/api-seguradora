@@ -3,7 +3,7 @@ package com.seguradora.api_seguradora.dto;
 import lombok.Data;
 
 @Data
-public class VeiculosDTO {
+public class VeiculoDTO {
     private Long id;
     private String marca;
     private String modelo;
@@ -11,11 +11,11 @@ public class VeiculosDTO {
     private ClienteDTO cliente;
 
 
-    public VeiculosDTO() {
+    public VeiculoDTO() {
 
     }
 
-    public VeiculosDTO(String placa, String modelo, String marca, ClienteDTO cliente) {
+    public VeiculoDTO(String placa, String modelo, String marca, ClienteDTO cliente) {
         this.placa = placa;
         this.modelo = modelo;
         this.marca = marca;

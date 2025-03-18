@@ -13,7 +13,8 @@ public class ClienteDTO {
     public ClienteDTO() {
 
     }
-    public ClienteDTO(String celular, String endereco, String cpf, String nome) {
+    public ClienteDTO(Long id,String celular, String endereco, String cpf, String nome) {
+        this.id = id;
         this.celular = celular;
         this.endereco = endereco;
         this.cpf = cpf;
